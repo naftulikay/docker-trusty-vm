@@ -1,0 +1,4 @@
+---
+command:
+  'date':
+    exit-status: 0

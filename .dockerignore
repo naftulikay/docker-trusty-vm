@@ -1,5 +1,11 @@
 .git
 .vagrant
+goss.d
 
 .travis.yml
+Makefile
 README.md
+Vagrantfile
+ansible.cfg
+goss.yml
+vagrant.yml
