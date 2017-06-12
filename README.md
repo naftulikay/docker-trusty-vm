@@ -31,6 +31,14 @@ docker exec --tty $CONTAINER_ID env TERM=xterm ansible --version
 docker exec --tty $CONTAINER_ID env TERM=xterm ansible-playbook /path/to/ansible/playbook.yml --syntax-check
 ```
 
+## Contracts
+
+This container **must** do the following:
+
+#### Services
+
+ - :ballot_box_with_check: enable services to be started via the init manager using `service $x start`.
+
  [docker]: https://hub.docker.com/r/naftulikay/trusty-vm/
  [svg-docker]: https://img.shields.io/docker/automated/naftulikay/trusty-vm.svg?maxAge=2592000
  [travis]: https://travis-ci.org/naftulikay/docker-trusty-vm
