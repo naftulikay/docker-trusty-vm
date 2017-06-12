@@ -1,9 +1,6 @@
 ---
 dist: trusty
-sudo: required
-
-env:
-  - image: naftulikay/travis-vm:latest
+sudo: false
 
 matrix:
   fast_finish: true
@@ -11,15 +8,10 @@ matrix:
 services:
   - docker
 
-before_install:
-  - docker build -t ${image} ./
-
 install: true
 
 script:
-  - container_id_file=$(mktemp)
-  - docker run --detach ${image} > ${container_id_file}
-  - docker exec --tty "$(cat ${container_id_file})" env TERM=xterm echo "Hello from Docker VM."
+  - make test-clean
 
 notifications:
   email:
