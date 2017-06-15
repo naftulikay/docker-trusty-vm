@@ -18,6 +18,11 @@ RUN apt-add-repository -y ppa:ansible/ansible >/dev/null \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean >/dev/null
 
+# provide selinux remount command; see https://github.com/naftulikay/docker-trusty-vm/issues/6
+RUN sed -i 's/exit 0//g' /etc/rc.local \
+  && ANSIBLE_FORCE_COLOR=yes ansible -i 127.0.0.1, -c local all -m blockinfile -a \
+    'path=/etc/rc.local block="mountpoint -q /sys/fs/selinux && mount -o remount,ro /sys/fs/selinux || true"'
+
 # install our wait-for-boot script
 COPY bin/wait-for-boot /usr/bin/wait-for-boot
 

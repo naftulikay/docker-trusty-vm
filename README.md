@@ -39,9 +39,15 @@ This container **must** do the following:
 
  - :ballot_box_with_check: enable services to be started via the init manager using `service $x start`.
 
+#### Mounts
+
+ - :ballot_box_with_check: `/sys/fs/selinux`, [if present][docker-privileged-selinux], will be remounted read-only to
+    allow most programs to work.
+
  [docker]: https://hub.docker.com/r/naftulikay/trusty-vm/
  [svg-docker]: https://img.shields.io/docker/automated/naftulikay/trusty-vm.svg?maxAge=2592000
  [travis]: https://travis-ci.org/naftulikay/docker-trusty-vm
  [svg-travis]: https://travis-ci.org/naftulikay/docker-trusty-vm.svg?branch=develop
  [post]: https://www.jeffgeerling.com/blog/2016/how-i-test-ansible-configuration-on-7-different-oses-docker
  [upstream]: https://hub.docker.com/r/geerlingguy/docker-ubuntu1404-ansible/
+ [docker-privileged-selinux]: https://twitter.com/naftulikay/status/875539799599235072

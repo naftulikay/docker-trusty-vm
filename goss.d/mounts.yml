@@ -1,0 +1,9 @@
+---
+{{ if and (eq .Env.privileged "true") (eq .Env.selinux_host "true") }}
+# if we are in privileged mode and the host is an SELinux host, then check the mount
+# see: https://twitter.com/naftulikay/status/875539799599235072
+mount:
+  '/sys/fs/selinux':
+    exists: true
+    opts: { contain-element: "ro" }
+{{ end }}
