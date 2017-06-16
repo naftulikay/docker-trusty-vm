@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+# In Docker without --privileged, runlevel will return 'unknown'; with --privileged, it seems to return a max of 2
+required_runlevel=2
+
 function .is-booted() {
   local current_runlevel="$(runlevel | awk '{print $2;}')"
-  test "${current_runlevel}" == "5" -o -z "${current_runlevel}"
+  test "${current_runlevel}" == "${required_runlevel}" -o -z "${current_runlevel}"
   return $?
 }
 
@@ -15,16 +18,18 @@ function .await-boot() {
   while ! .is-booted && [ $i -lt $max_retries ]; do
     iteration=$(($i + 1)) # the nth iteration, one-based
 
-    printf "[%02d/%02d] waiting %ds for system to reach runlevel 5...\n" $iteration $max_retries $sleep_time
+    printf "[%02d/%02d] waiting %ds for system to reach runlevel ${required_runlevel}...\n" \
+      $iteration $max_retries $sleep_time
+
     sleep $sleep_time
 
     i=$iteration
   done
 
   if .is-booted ; then
-    echo "Host has reached runlevel 5."
+    echo "Host has reached runlevel ${required_runlevel}."
   else
-    echo "ERROR: Host failed to reach runlevel 5." >&2
+    echo "ERROR: Host failed to reach runlevel ${required_runlevel}." >&2
     return 1
   fi
 }

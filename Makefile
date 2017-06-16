@@ -5,7 +5,10 @@ TAG:=latest
 
 MOUNT_PATH:=/etc/ansible/trusty
 LOCAL_FLAGS:=-v $(shell pwd):$(MOUNT_PATH):ro -v $(shell pwd)/ansible.cfg:/etc/ansible/ansible.cfg:ro
-SELINUX_FLAGS:=
+
+# allows us to test SELinux bugs
+PRIVILEGED:=true
+SELINUX_HOST:=$(shell mountpoint -q /sys/fs/selinux && echo 'true' || echo 'false')
 
 CONTAINER_ID_FILE:=/tmp/container.id
 CONTAINER_ID:=$(shell cat "$(CONTAINER_ID_FILE)" 2>/dev/null)
@@ -31,8 +34,12 @@ start: build
 		exit 1 ; \
 	fi
 	@# start it
-	@echo "Starting the Container:"
-	docker run -d $(SYSTEMD_FLAGS) $(LOCAL_FLAGS) $$(test -d /etc/selinux && echo $(SELINUX_FLAGS)) $(IMAGE_NAME) > $(CONTAINER_ID_FILE)
+	@echo "Starting the Container: "
+	@set -x && docker run -d \
+		$$(test "$(PRIVILEGED)" == "true" && echo "--privileged") \
+		$(LOCAL_FLAGS) \
+		$(IMAGE_NAME) | \
+	tee $(CONTAINER_ID_FILE)
 
 stop:
 	@if [ -z "$(CONTAINER_ID)" ] && ! docker ps --filter id=$(CONTAINER_ID) --format '{{.ID}}' | grep -qP '.*' ; then \
@@ -57,11 +64,11 @@ test:
 		echo "ERROR: Container Not Running" >&2 ; \
 		exit 1 ; \
 	fi
-	@# need a way to ask systemd in the container to wait until all services up
+	@# need a way to ask the container to wait until all services up
 	docker exec $(CONTAINER_ID) wait-for-boot
 	docker exec -it $(CONTAINER_ID) ansible-galaxy install -r ${MOUNT_PATH}/requirements.yml
 	docker exec -it $(CONTAINER_ID) env ANSIBLE_FORCE_COLOR=yes \
-		ansible-playbook -e degoss_no_clean=true $(MOUNT_PATH)/test.yml
+		ansible-playbook -e privileged=$(PRIVILEGED) -e selinux_host=$(SELINUX_HOST) $(MOUNT_PATH)/test.yml
 
 test-clean:
 	$(MAKE) restart

@@ -1,11 +1,17 @@
-.git
-.vagrant
-goss.d
+# directories
+.git/
+.vagrant/
+goss.d/
+roles/
 
+# files
+.gitignore
 .travis.yml
-Makefile
-README.md
-Vagrantfile
 ansible.cfg
 goss.yml
+Makefile
+README.md
+requirements.yml
+test.yml
 vagrant.yml
+Vagrantfile
