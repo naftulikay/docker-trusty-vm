@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+### BEGIN INIT INFO
+# Provides:          selinux-remount
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Remount SELinux FS as read-only.
+# Description:       Remount SELinux FS as read-only.
+### END INIT INFO
+
+
+sfs_mount_point=/sys/fs/selinux
+
+function .log() {
+  logger -s -t selinux-remount $@
+}
+
+function .main() {
+  if mountpoint -q ${sfs_mount_point}; then
+    .log "${sfs_mount_point} is a mount point."
+
+    if mount | grep selinux | grep -q rw ; then
+      .log "${sfs_mount_point} is mounted read-write, remounting read-only."
+      ( set -x ; mount -o remount,ro ${sfs_mount_point} )
+    else
+      .log "${sfs_mount_point} is mounted read-only: $(mount | grep selinux)"
+    fi
+
+    .log "$(mount | grep selinux)"
+  else
+    .log "${sfs_mount_point} is not a mount point."
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  set -e
+  .main "$@"
+fi

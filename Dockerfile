@@ -19,12 +19,17 @@ RUN apt-add-repository -y ppa:ansible/ansible >/dev/null \
   && apt-get clean >/dev/null
 
 # provide selinux remount command; see https://github.com/naftulikay/docker-trusty-vm/issues/6
-RUN sed -i 's/exit 0//g' /etc/rc.local \
-  && ANSIBLE_FORCE_COLOR=yes ansible -i 127.0.0.1, -c local all -m blockinfile -a \
-    'path=/etc/rc.local block="mountpoint -q /sys/fs/selinux && mount -o remount,ro /sys/fs/selinux || true"'
 
 # install our wait-for-boot script
 COPY bin/wait-for-boot /usr/bin/wait-for-boot
+# install our selinux remount script
+COPY bin/selinux-remount /etc/init.d/selinux-remount
+
+# enable this script in all run stages
+RUN update-rc.d selinux-remount defaults
+
+# insert it into the @#$!ing fstab
+RUN echo "selinuxfs /sys/fs/selinux selinux defaults,ro,relatime 0 0" >> /etc/fstab
 
 # Install Ansible inventory file
 RUN echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts

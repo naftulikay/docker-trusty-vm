@@ -3,6 +3,15 @@
 A lightweight Ubuntu 14.04 Trusty VM in Docker. [Based on `geerlingguy/docker-ubuntu1404-ansible`][upstream], do read
 the author's [excellent post][post] about testing Ansible across multiple operating systems.
 
+> **NOTE:** When running this container as `--privileged` on a machine running SELinux in enforcing mode, the container
+> _must_ remount `/sys/fs/selinux` in read-only mode because Ubuntu by default does not understand how to deal with an
+> SELinux system and SELinux packages/policy/tools would need to be installed in the image to make it work properly.
+> If this filesystem is _not_ remounted read-only, `dpkg` and `apt` will crash, unable to read security contexts.
+>
+> The problem with doing this on a `--privileged` container: if the _host_ has SELinux mounted read-write, it _too_ will
+> be remounted read only. After you have finished work with the container, please be sure to remount in read-write mode
+> on the host operating system.
+
 Published to the Docker Hub as `naftulikay/trusty-vm`.
 
 ### Running:
