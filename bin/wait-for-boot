@@ -15,6 +15,9 @@ function .await-boot() {
   local max_retries="${1:-10}"
   local sleep_time="${2:-5}"
 
+  # invoke boot scripts because why not?
+  ( set +e ; /etc/rc.local )
+
   while ! .is-booted && [ $i -lt $max_retries ]; do
     iteration=$(($i + 1)) # the nth iteration, one-based
 
