@@ -57,7 +57,7 @@ restart:
 	$(MAKE) start
 
 shell: status
-	docker exec -it $(CONTAINER_ID) /bin/bash
+	docker exec -it $(CONTAINER_ID) /bin/bash -
 
 test:
 	@if [ -z "$(CONTAINER_ID)" ]; then \

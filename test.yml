@@ -3,11 +3,8 @@
   hosts: all
   become: true
   tasks:
-    - name: install ntp package
-      apt: name=ntp state=present cache_valid_time=3600
-
-    - name: start and enable ntp service
-      service: name=ntp state=started enabled=true
+    - name: install a package
+      apt: name=jq state=present cache_valid_time=3600
 
 - name: goss tests
   hosts: all

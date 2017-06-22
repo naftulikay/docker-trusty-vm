@@ -1,7 +1,4 @@
 ---
 package:
-  less:
-    installed: true
-
-  ntp:
-    installed: true
+  jq: { installed: true }
+  less: { installed: true }
