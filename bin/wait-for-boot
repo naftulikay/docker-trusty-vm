@@ -1,12 +1,37 @@
 #!/usr/bin/env bash
 
+# imports
+source /etc/init.d/selinux-remount
+
 # In Docker without --privileged, runlevel will return 'unknown'; with --privileged, it seems to return a max of 2
 required_runlevel=2
 
+function .log() {
+  logger -s -t wait-for-boot $@
+}
+
 function .is-booted() {
-  local current_runlevel="$(runlevel | awk '{print $2;}')"
-  test "${current_runlevel}" == "${required_runlevel}" -o -z "${current_runlevel}"
-  return $?
+  local current_runlevel="$(.runlevel)"
+  if [ -z "$current_runlevel" -o "$current_runlevel" == "unknown" ]; then
+    # use this opportunity to remount
+    if .is-selinux-mnt && .is-selinux-rw ; then
+      .log "remounting selinuxfs in read-only mode"
+      .selinux-remount
+    fi
+    return 0
+  elif [ $current_runlevel -ge $required_runlevel ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function .runlevel() {
+  if runlevel 2>/dev/null | grep -qP '^unknown$' ; then
+    echo unknown
+  else
+    runlevel 2>/dev/null | awk '{print $2;}'
+  fi
 }
 
 function .await-boot() {

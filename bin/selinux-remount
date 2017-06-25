@@ -17,13 +17,33 @@ function .log() {
   logger -s -t selinux-remount $@
 }
 
+function .is-selinux-mnt() {
+  mountpoint -q ${sfs_mount_point}
+  return $?
+}
+
+function .is-selinux-rw() {
+  mount | grep selinux | grep -q rw
+  return $?
+}
+
+function .selinux-remount() {
+  local verbose="${1:-y}"
+
+  if [ "$verbose" == "y" ]; then
+    ( set -x ; mount -o remount,ro ${sfs_mount_point} )
+  else
+    mount -o remount,ro ${sfs_mount_point}
+  fi
+}
+
 function .main() {
-  if mountpoint -q ${sfs_mount_point}; then
+  if .is-selinux-mnt ; then
     .log "${sfs_mount_point} is a mount point."
 
-    if mount | grep selinux | grep -q rw ; then
+    if .is-selinux-rw ; then
       .log "${sfs_mount_point} is mounted read-write, remounting read-only."
-      ( set -x ; mount -o remount,ro ${sfs_mount_point} )
+      .selinux-remount
     else
       .log "${sfs_mount_point} is mounted read-only: $(mount | grep selinux)"
     fi
