@@ -1,4 +1,0 @@
----
-package:
-  jq: { installed: true }
-  less: { installed: true }

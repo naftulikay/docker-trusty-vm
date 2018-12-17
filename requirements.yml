@@ -1,4 +1,5 @@
 ---
- - name: degoss
-   src: naftulikay.degoss
-   version: v1.2.1
+- name: vagrant-docker
+  src: naftulikay.vagrant-docker
+- name: vagrant-python-dev
+  src: naftulikay.vagrant-python-dev

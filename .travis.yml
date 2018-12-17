@@ -2,16 +2,11 @@
 dist: trusty
 sudo: false
 
-matrix:
-  fast_finish: true
-
-services:
-  - docker
-
-install: true
+language: python
+python: 3.6
 
 script:
-  - make test-clean
+  - make test
 
 notifications:
   email:
