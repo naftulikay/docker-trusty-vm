@@ -1,0 +1,16 @@
+---
+command:
+  which python:
+    exit-status: 0
+
+package:
+  jq:
+    installed: true
+
+mount:
+  # when docker is privileged, the SELinux mount should exist and be read only
+  '/sys/fs/selinux':
+    exists: {{ and .Vars.host_selinux .Vars.docker_privileged }}
+    opts:
+      - ro
+      - relatime
