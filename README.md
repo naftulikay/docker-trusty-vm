@@ -24,4 +24,4 @@ Licensed at your discretion under either:
  [docker]: https://hub.docker.com/r/naftulikay/trusty-vm/
  [docker.svg]: https://img.shields.io/docker/automated/naftulikay/trusty-vm.svg?maxAge=2592000
  [travis]: https://travis-ci.org/naftulikay/docker-trusty-vm
- [travis.svg]: https://travis-ci.org/naftulikay/docker-trusty-vm.svg?branch=develop
+ [travis.svg]: https://travis-ci.org/naftulikay/docker-trusty-vm.svg?branch=master
