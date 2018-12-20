@@ -7,7 +7,7 @@ A lightweight Ubuntu 14.04 Trusty VM in Docker, primarily used for integration t
 The image and container can be built and started like so:
 
 ```
-$ docker build -t naftulikay/trusty-vm:latest
+$ docker build -t naftulikay/trusty-vm:latest ./
 $ docker run -d --name trusty naftulikay/trusty-vm:latest
 $ docker exec -it trusty wait-for-boot
 ```
