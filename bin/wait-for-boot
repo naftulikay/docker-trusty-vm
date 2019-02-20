@@ -43,8 +43,8 @@ function .await-boot() {
     i=$iteration
   done
 
-  if ! service selinux-remount start &>/dev/null ; then
-    service selinux-remount start
+  if ! sudo service selinux-remount start &>/dev/null ; then
+    sudo service selinux-remount start
   fi
 
   if .is-booted ; then

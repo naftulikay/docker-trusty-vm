@@ -1,5 +1,11 @@
 ---
 command:
+  'id -u -n':
+    exit-status: 0
+    stdout:
+      - container
+  'sudo ls':
+    exit-status: 0
   which python:
     exit-status: 0
 
