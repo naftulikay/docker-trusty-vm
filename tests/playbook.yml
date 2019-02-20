@@ -1,7 +1,6 @@
 ---
 - name: await start
   hosts: all
-  become: true
   tasks:
     - name: wait for vm boot
       command: wait-for-boot
@@ -9,14 +8,13 @@
 
 - name: demonstrate capabilities
   hosts: all
-  become: true
   tasks:
     - name: install a package
       apt: name=jq state=present update_cache=yes
+      become: true
 
 - name: goss tests
   hosts: all
-  become: true
   roles:
     - role: degoss
       goss_file: goss.yml

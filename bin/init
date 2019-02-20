@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
 function .main() {
-  service selinux-remount start
+  sudo service selinux-remount start
 
-  # while sleep 1 ; do
-    # echo "$(date --iso-8601=seconds) Mount Status: $(mount | grep -i selinux)" >> /var/log/selinux
-  # done &
-#
-
-  exec /sbin/init $@
+  exec /usr/sbin/escalator /sbin/init -- $@
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
